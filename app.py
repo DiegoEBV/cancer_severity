@@ -100,6 +100,8 @@ def load_and_train():
     df = pd.get_dummies(df, drop_first=True)
     df["Severity_Class"] = pd.cut(df["Target_Severity_Score"], bins=[0,3,7,10], labels=[0,1,2])
 
+    # Eliminar data leakage: variables que solo se conocen DESPUÉS del diagnóstico
+    df = df.drop(columns=["Treatment_Cost_USD","Survival_Years"], errors="ignore")
     X = df.drop(columns=["Target_Severity_Score","Severity_Class"])
     y = df["Severity_Class"].astype(int)
 
@@ -125,7 +127,7 @@ def load_and_train():
 
 def build_vector(pd_dict, feature_cols):
     row = {col: 0 for col in feature_cols}
-    for k in ["Age","Year","Genetic_Risk","Air_Pollution","Alcohol_Use","Smoking","Obesity_Level","Treatment_Cost_USD","Survival_Years"]:
+    for k in ["Age","Year","Genetic_Risk","Air_Pollution","Alcohol_Use","Smoking","Obesity_Level"]:
         if k in row: row[k] = pd_dict.get(k, 0)
     if "Cancer_Stage" in row: row["Cancer_Stage"] = STAGE_MAP.get(pd_dict.get("Cancer_Stage","Stage 0"), 1)
     for prefix, key in [("Gender","Gender"),("Country_Region","Country_Region"),("Cancer_Type","Cancer_Type")]:
@@ -211,8 +213,6 @@ with st.sidebar:
     st.markdown("#### 🩺 Datos Clínicos")
     cancer_type  = st.selectbox("Tipo de Cáncer", CANCER_TYPES)
     cancer_stage = st.selectbox("Etapa del Cáncer", CANCER_STAGES)
-    cost         = st.number_input("Costo Tratamiento (USD)", 5000, 100000, 52000, step=1000)
-    survival     = st.slider("Años de Supervivencia", 0.0, 10.0, 5.0, 0.1)
     st.markdown("---")
     btn = st.button("🔍 Clasificar Paciente")
 
@@ -250,7 +250,7 @@ with tab1:
             pd_dict = {"Age":age,"Gender":gender,"Country_Region":country,"Year":year,
                        "Genetic_Risk":gen_risk,"Air_Pollution":air_poll,"Alcohol_Use":alcohol,
                        "Smoking":smoking,"Obesity_Level":obesity,"Cancer_Type":cancer_type,
-                       "Cancer_Stage":cancer_stage,"Treatment_Cost_USD":cost,"Survival_Years":survival}
+                       "Cancer_Stage":cancer_stage}
             vec       = build_vector(pd_dict, feature_cols)
             vec_sc    = scaler.transform(vec)
             pred_cls  = int(mlp.predict(vec_sc)[0])
@@ -277,10 +277,10 @@ with tab1:
     with c_info:
         st.markdown('<div class="section-title">Datos Ingresados</div>', unsafe_allow_html=True)
         st.dataframe(pd.DataFrame({"Campo":["Edad","Género","País","Año","Riesgo Genético","Contaminación",
-                    "Alcohol","Tabaquismo","Obesidad","Tipo Cáncer","Etapa","Costo","Años Superv."],
+                    "Alcohol","Tabaquismo","Obesidad","Tipo Cáncer","Etapa"],
                 "Valor":[age,gender,country,year,f"{gen_risk:.1f}/10",f"{air_poll:.1f}/10",
                     f"{alcohol:.1f}/10",f"{smoking:.1f}/10",f"{obesity:.1f}/10",
-                    cancer_type,cancer_stage,f"${cost:,}",f"{survival:.1f} años"]}),
+                    cancer_type,cancer_stage]}),
             use_container_width=True, hide_index=True)
         st.markdown('<div class="section-title">Distribución Real del Dataset</div>', unsafe_allow_html=True)
         counts = [dist.get(i,0) for i in range(3)]
