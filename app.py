@@ -219,86 +219,74 @@ html, body, [class*="css"] {
 
 /* Tabs */
 .stTabs [data-baseweb="tab-list"] {
-    background: #1a3560;
+    background: #0f1f3d;
     border-radius: 12px;
     padding: 5px;
-    gap: 4px;
+    gap: 3px;
+    border: 1px solid #1e3a7a;
 }
 .stTabs [data-baseweb="tab"] {
-    background: transparent;
-    border-radius: 8px;
-    padding: 9px 20px;
-    font-weight: 600;
-    color: #93b4d8 !important;
-    font-size: 0.88rem;
-    transition: all 0.18s;
+    background: transparent !important;
+    border-radius: 8px !important;
+    padding: 10px 22px !important;
+    font-weight: 600 !important;
+    color: #c5d4eb !important;
+    font-size: 0.87rem !important;
+    transition: all 0.18s !important;
+    border: none !important;
 }
 .stTabs [data-baseweb="tab"]:hover {
-    background: rgba(255,255,255,0.08) !important;
+    background: rgba(255,255,255,0.10) !important;
     color: #ffffff !important;
 }
 .stTabs [aria-selected="true"] {
-    background: #ffffff !important;
-    color: #1e3a7a !important;
-    box-shadow: 0 2px 8px rgba(0,0,0,0.18);
+    background: #2563eb !important;
+    color: #ffffff !important;
+    box-shadow: 0 2px 10px rgba(37,99,235,0.40) !important;
     font-weight: 700 !important;
 }
 
-/* Ocultar boton vacio de las cards landing */
-button[kind="secondary"]:has(> div > p:empty),
-[data-testid="stButton"] button p:empty { display: none !important; }
-[data-testid="stButton"]:has(button > div > p:empty) {
-    position: absolute !important;
-    width: 100% !important;
-    height: 100% !important;
-    top: 0 !important; left: 0 !important;
-    opacity: 0 !important;
-    z-index: 10 !important;
-}
+/* Landing card buttons — estilos embebidos en .card-enter */
 
 /* Cards landing como botones clickeables */
-.module-card.clickable {
-    cursor: pointer;
-    position: relative;
+.module-card {
     transition: transform 0.22s ease, box-shadow 0.22s ease, border-color 0.22s ease;
 }
-.module-card.clickable:hover {
-    transform: translateY(-6px);
-    box-shadow: 0 12px 36px rgba(0,0,0,0.16) !important;
+.module-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 14px 38px rgba(0,0,0,0.13) !important;
 }
-.module-card.salud.clickable:hover  { border-color: #2563eb !important; }
-.module-card.logistica.clickable:hover { border-color: #22c55e !important; }
+.module-card.salud:hover  { border-color: #2563eb !important; }
+.module-card.logistica:hover { border-color: #22c55e !important; }
 
 .card-icon-wrap {
     width: 54px; height: 54px;
     border-radius: 50%;
     display: flex; align-items: center; justify-content: center;
     font-size: 1.4rem; font-weight: 800;
-    margin: 0 auto 12px;
+    margin: 0 auto 14px;
 }
-.salud-icon    { background: #dbeafe; color: #1e40af; }
-.log-icon      { background: #dcfce7; color: #15803d; }
+.salud-icon { background: #dbeafe; color: #1e40af; }
+.log-icon   { background: #dcfce7; color: #15803d; }
 
-.card-enter {
-    display: inline-block;
-    margin-top: 14px;
-    padding: 9px 28px;
-    background: linear-gradient(135deg, #1e3a7a, #2563eb);
+/* Botones de las cards landing */
+.landing-col [data-testid="stButton"] > button {
+    width: 100% !important;
+    margin-top: 14px !important;
+    border-radius: 10px !important;
+    padding: 13px 0 !important;
+    font-size: 0.97rem !important;
+    font-weight: 700 !important;
+    letter-spacing: 0.02em !important;
+}
+.salud-btn [data-testid="stButton"] > button {
+    background: linear-gradient(135deg, #1e3a7a, #2563eb) !important;
+    box-shadow: 0 4px 14px rgba(37,99,235,0.35) !important;
+}
+.log-btn [data-testid="stButton"] > button {
+    background: linear-gradient(135deg, #14532d, #22c55e) !important;
+    box-shadow: 0 4px 14px rgba(34,197,94,0.35) !important;
     color: #ffffff !important;
-    border-radius: 8px;
-    font-weight: 600;
-    font-size: 0.9rem;
-    box-shadow: 0 3px 10px rgba(37,99,235,0.30);
-    transition: all 0.2s;
-}
-.module-card.clickable:hover .card-enter {
-    box-shadow: 0 6px 18px rgba(37,99,235,0.45);
-    transform: scale(1.04);
-}
-.log-enter { background: linear-gradient(135deg, #15803d, #22c55e) !important;
-             box-shadow: 0 3px 10px rgba(34,197,94,0.30) !important; }
-.module-card.logistica.clickable:hover .log-enter {
-    box-shadow: 0 6px 18px rgba(34,197,94,0.45) !important;
 }
 
 /* Dataframes */
@@ -346,13 +334,7 @@ hr { border-color: #e2e8f0 !important; margin: 20px 0; }
 }
 [data-baseweb="select"] span { color: #0f1f3d !important; font-weight: 500 !important; }
 
-/* Tabs active pill */
-.stTabs [aria-selected="true"] {
-    background: #1e3a7a !important;
-    color: #ffffff !important;
-    box-shadow: 0 2px 8px rgba(30,58,122,0.25) !important;
-}
-.stTabs [data-baseweb="tab"] { color: #374151 !important; font-weight: 600 !important; }
+/* Tabs active pill — ver bloque principal arriba */
 
 /* Progress bar */
 [data-testid="stProgressBar"] > div > div { background: #2563eb !important; }
@@ -592,34 +574,36 @@ def page_landing():
     col_s, col_l = st.columns(2, gap="large")
 
     with col_s:
-        if st.button(" ", key="btn_salud"):
-            st.session_state.modulo = "salud"
-            st.rerun()
         st.markdown("""
-        <div class="module-card salud clickable" onclick="document.querySelector('[data-testid=stButton] button').click()">
+        <div class="module-card salud">
             <div class="card-icon-wrap salud-icon">S</div>
             <h2>Modulo de Salud</h2>
             <p>Clasificacion de riesgo oncologico · MLP vs Arbol de Decision</p>
             <p style="font-size:0.82rem;color:#64748b;margin-top:6px;">50,000 pacientes reales · Kaggle</p>
             <span class="badge badge-salud">MLP + Arbol de Decision</span>
-            <div class="card-enter">Ingresar</div>
         </div>
         """, unsafe_allow_html=True)
+        st.markdown('<div class="salud-btn">', unsafe_allow_html=True)
+        if st.button("Ingresar al Modulo de Salud", key="btn_salud", use_container_width=True):
+            st.session_state.modulo = "salud"
+            st.rerun()
+        st.markdown('</div>', unsafe_allow_html=True)
 
     with col_l:
-        if st.button(" ", key="btn_log"):
-            st.session_state.modulo = "logistica"
-            st.rerun()
         st.markdown("""
-        <div class="module-card logistica clickable">
+        <div class="module-card logistica">
             <div class="card-icon-wrap log-icon">L</div>
             <h2>Modulo de Logistica</h2>
             <p>Prediccion de demanda y clasificacion de perecibles</p>
             <p style="font-size:0.82rem;color:#64748b;margin-top:6px;">Corporacion Favorita · Kaggle · 2.6M registros</p>
             <span class="badge badge-logistica">Ridge + XGBoost</span>
-            <div class="card-enter log-enter">Ingresar</div>
         </div>
         """, unsafe_allow_html=True)
+        st.markdown('<div class="log-btn">', unsafe_allow_html=True)
+        if st.button("Ingresar al Modulo de Logistica", key="btn_log", use_container_width=True):
+            st.session_state.modulo = "logistica"
+            st.rerun()
+        st.markdown('</div>', unsafe_allow_html=True)
 
     st.markdown("---")
     st.markdown("""
