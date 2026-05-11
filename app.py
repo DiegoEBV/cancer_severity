@@ -219,23 +219,86 @@ html, body, [class*="css"] {
 
 /* Tabs */
 .stTabs [data-baseweb="tab-list"] {
-    background: #f1f5f9;
-    border-radius: 10px;
-    padding: 4px;
+    background: #1a3560;
+    border-radius: 12px;
+    padding: 5px;
     gap: 4px;
 }
 .stTabs [data-baseweb="tab"] {
     background: transparent;
     border-radius: 8px;
-    padding: 8px 18px;
+    padding: 9px 20px;
     font-weight: 600;
-    color: #475569 !important;
+    color: #93b4d8 !important;
     font-size: 0.88rem;
+    transition: all 0.18s;
+}
+.stTabs [data-baseweb="tab"]:hover {
+    background: rgba(255,255,255,0.08) !important;
+    color: #ffffff !important;
 }
 .stTabs [aria-selected="true"] {
     background: #ffffff !important;
     color: #1e3a7a !important;
-    box-shadow: 0 2px 6px rgba(0,0,0,0.10);
+    box-shadow: 0 2px 8px rgba(0,0,0,0.18);
+    font-weight: 700 !important;
+}
+
+/* Ocultar boton vacio de las cards landing */
+button[kind="secondary"]:has(> div > p:empty),
+[data-testid="stButton"] button p:empty { display: none !important; }
+[data-testid="stButton"]:has(button > div > p:empty) {
+    position: absolute !important;
+    width: 100% !important;
+    height: 100% !important;
+    top: 0 !important; left: 0 !important;
+    opacity: 0 !important;
+    z-index: 10 !important;
+}
+
+/* Cards landing como botones clickeables */
+.module-card.clickable {
+    cursor: pointer;
+    position: relative;
+    transition: transform 0.22s ease, box-shadow 0.22s ease, border-color 0.22s ease;
+}
+.module-card.clickable:hover {
+    transform: translateY(-6px);
+    box-shadow: 0 12px 36px rgba(0,0,0,0.16) !important;
+}
+.module-card.salud.clickable:hover  { border-color: #2563eb !important; }
+.module-card.logistica.clickable:hover { border-color: #22c55e !important; }
+
+.card-icon-wrap {
+    width: 54px; height: 54px;
+    border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 1.4rem; font-weight: 800;
+    margin: 0 auto 12px;
+}
+.salud-icon    { background: #dbeafe; color: #1e40af; }
+.log-icon      { background: #dcfce7; color: #15803d; }
+
+.card-enter {
+    display: inline-block;
+    margin-top: 14px;
+    padding: 9px 28px;
+    background: linear-gradient(135deg, #1e3a7a, #2563eb);
+    color: #ffffff !important;
+    border-radius: 8px;
+    font-weight: 600;
+    font-size: 0.9rem;
+    box-shadow: 0 3px 10px rgba(37,99,235,0.30);
+    transition: all 0.2s;
+}
+.module-card.clickable:hover .card-enter {
+    box-shadow: 0 6px 18px rgba(37,99,235,0.45);
+    transform: scale(1.04);
+}
+.log-enter { background: linear-gradient(135deg, #15803d, #22c55e) !important;
+             box-shadow: 0 3px 10px rgba(34,197,94,0.30) !important; }
+.module-card.logistica.clickable:hover .log-enter {
+    box-shadow: 0 6px 18px rgba(34,197,94,0.45) !important;
 }
 
 /* Dataframes */
@@ -529,30 +592,34 @@ def page_landing():
     col_s, col_l = st.columns(2, gap="large")
 
     with col_s:
-        st.markdown("""
-        <div class="module-card salud">
-            <h2>Modulo de Salud</h2>
-            <p>Clasificacion de riesgo oncologico para pacientes.<br>
-            Dataset: 50,000 pacientes reales · Kaggle</p>
-            <span class="badge badge-salud">MLP + Arbol de Decision</span>
-        </div>
-        """, unsafe_allow_html=True)
-        if st.button("Ingresar al modulo de Salud", key="btn_salud"):
+        if st.button(" ", key="btn_salud"):
             st.session_state.modulo = "salud"
             st.rerun()
-
-    with col_l:
         st.markdown("""
-        <div class="module-card logistica">
-            <h2>Modulo de Logistica</h2>
-            <p>Prediccion de demanda y clasificacion de perecibles.<br>
-            Dataset: Corporacion Favorita · Kaggle</p>
-            <span class="badge badge-logistica">Ridge + LightGBM</span>
+        <div class="module-card salud clickable" onclick="document.querySelector('[data-testid=stButton] button').click()">
+            <div class="card-icon-wrap salud-icon">S</div>
+            <h2>Modulo de Salud</h2>
+            <p>Clasificacion de riesgo oncologico · MLP vs Arbol de Decision</p>
+            <p style="font-size:0.82rem;color:#64748b;margin-top:6px;">50,000 pacientes reales · Kaggle</p>
+            <span class="badge badge-salud">MLP + Arbol de Decision</span>
+            <div class="card-enter">Ingresar</div>
         </div>
         """, unsafe_allow_html=True)
-        if st.button("Ingresar al modulo de Logistica", key="btn_log"):
+
+    with col_l:
+        if st.button(" ", key="btn_log"):
             st.session_state.modulo = "logistica"
             st.rerun()
+        st.markdown("""
+        <div class="module-card logistica clickable">
+            <div class="card-icon-wrap log-icon">L</div>
+            <h2>Modulo de Logistica</h2>
+            <p>Prediccion de demanda y clasificacion de perecibles</p>
+            <p style="font-size:0.82rem;color:#64748b;margin-top:6px;">Corporacion Favorita · Kaggle · 2.6M registros</p>
+            <span class="badge badge-logistica">Ridge + XGBoost</span>
+            <div class="card-enter log-enter">Ingresar</div>
+        </div>
+        """, unsafe_allow_html=True)
 
     st.markdown("---")
     st.markdown("""
@@ -592,8 +659,8 @@ def page_salud():
         st.markdown("#### Datos Clinicos")
         cancer_type  = st.selectbox("Tipo de Cancer", CANCER_TYPES)
         cancer_stage = st.selectbox("Etapa del Cancer", CANCER_STAGES)
-        cost         = st.number_input("Costo Tratamiento (USD)", 5000, 100000, 52000, step=1000)
-        survival     = st.slider("Anos de Supervivencia", 0.0, 10.0, 5.0, 0.1)
+        cost     = 52000   # valor promedio del dataset (oculto)
+        survival = 5.0     # valor promedio del dataset (oculto)
         st.markdown("---")
         btn = st.button("Clasificar Paciente")
 
@@ -854,29 +921,22 @@ def page_logistica():
         familia    = st.selectbox("Familia de producto", FAMILIES)
         ciudad     = st.selectbox("Ciudad", CITIES)
         store_type = st.selectbox("Tipo de tienda", ["A","B","C","D","E"])
-        cluster    = st.select_slider("Cluster de tienda", options=list(range(1,18)), value=5)
-
-        st.markdown("### Contexto de Venta")
-        onpromotion = st.radio("En promocion", ["No","Si"], horizontal=True)
-        es_festivo  = st.radio("Dia festivo",   ["No","Si"], horizontal=True)
-        dia_semana_str = st.selectbox("Dia de la semana",
-            ["Lunes","Martes","Miercoles","Jueves","Viernes","Sabado","Domingo"])
-        mes  = st.select_slider("Mes", options=list(range(1,13)), value=3)
-        anio = st.select_slider("Año", options=[2013,2014,2015,2016,2017], value=2013)
-
-        st.markdown("### Indicadores de Mercado")
-        dcoilwtico_scaled     = st.slider("Precio petroleo (0=min, 1=max)", 0.0, 1.0, 0.55, 0.01)
-        n_transactions_scaled = st.slider("Transacciones tienda (0=min, 1=max)", 0.0, 1.0, 0.50, 0.01)
-
-        st.markdown("### Historial de Ventas (unidades)")
-        lag_1     = st.number_input("Ventas ayer",          min_value=0.0, max_value=34.0, value=8.0,  step=0.5, format="%.1f")
-        lag_7     = st.number_input("Ventas hace 7 dias",   min_value=0.0, max_value=34.0, value=7.5,  step=0.5, format="%.1f")
-        lag_14    = st.number_input("Ventas hace 14 dias",  min_value=0.0, max_value=34.0, value=7.0,  step=0.5, format="%.1f")
-        media_7d  = st.number_input("Media 7 dias",         min_value=0.0, max_value=34.0, value=7.2,  step=0.5, format="%.1f")
-        media_14d = st.number_input("Media 14 dias",        min_value=0.0, max_value=34.0, value=7.1,  step=0.5, format="%.1f")
-        std_7d    = st.number_input("Desv. estandar 7 dias",min_value=0.0, max_value=10.0, value=2.5,  step=0.5, format="%.1f")
-
-        log_unit_sales = float(np.log1p(lag_1))  # calculado automaticamente
+        # Valores fijos internos (no se muestran al usuario)
+        cluster               = 5
+        onpromotion           = "No"
+        es_festivo            = "No"
+        dia_semana_str        = "Lunes"
+        mes                   = 3
+        anio                  = 2013
+        dcoilwtico_scaled     = 0.55
+        n_transactions_scaled = 0.50
+        lag_1                 = 8.0
+        lag_7                 = 7.5
+        lag_14                = 7.0
+        media_7d              = 7.2
+        media_14d             = 7.1
+        std_7d                = 2.5
+        log_unit_sales        = float(np.log1p(lag_1))
 
         st.markdown("---")
         btn_pred = st.button("Predecir Demanda y Perecibilidad", use_container_width=True)
